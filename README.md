@@ -10,12 +10,12 @@ Requirements
 ### Cookbooks
 The following cookbooks are direct dependencies because they're used for common "default" functionality.
 
-- build-essential (for nginx::source)
-- ohai (for nginx::ohai_plugin)
+- build-essential (for nginx-pixelcog::source)
+- ohai (for nginx-pixelcog::ohai_plugin)
 
 The following cookbook is not a strict dependency because its use can be controlled by an attribute, so it may not be a common "default."
 
-- runit (for nginx::source)
+- runit (for nginx-pixelcog::source)
 - On RHEL family distros, the "yum" cookbook is required for `recipe[yum::epel]`.
 - On Ubuntu, when using Nginx.org's stable package, `recipe[apt::default]` is required.
 
@@ -42,7 +42,7 @@ Generally used attributes. Some have platform specific values. See `attributes/d
 - `node['nginx']['group]` - Group for Nginx.
 - `node['nginx']['binary']` - Path to the Nginx binary.
 - `node['nginx']['init_style']` - How to run Nginx as a service when
-  using `nginx::source`. Values can be "runit", "upstart", "init" or
+  using `nginx-pixelcog::source`. Values can be "runit", "upstart", "init" or
   "bluepill".  When using runit or bluepill, those recipes will be
   included as well and are dependencies of this cookbook.  Recipes
   are not included for upstart, it is assumed that upstart is built
@@ -106,7 +106,7 @@ Generally used attributes. Some have platform specific values. See `attributes/d
 - `node['nginx']['repo_source']` - when installed from a package this attribute affects
   which yum repositories, if any, will be added before installing the nginx package. The
   default value of 'epel' will use the `yum::epel` recipe, 'nginx' will use the
-  `nginx::repo` recipe, and setting no value will not add any additional repositories.
+  `nginx-pixelcog::repo` recipe, and setting no value will not add any additional repositories.
 * `node['nginx']['sts_max_age']` - Enable Strict Transport Security for all apps (See: http://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security).  This attribute adds the following header:
 
   Strict-Transport-Security max-age=SECONDS
@@ -141,19 +141,19 @@ Rate Limiting
 
 ### Attributes set in recipes
 
-#### nginx::source
+#### nginx-pixelcog::source
 - `node['nginx']['daemon_disable']` - Whether the daemon should be
   disabled which can be true or false; disable the daemon (run in the
   foreground) when using a service supervisor such as runit or
   bluepill for "init_style". This is automatically set in the
-  `nginx::source` recipe when the init style is not bluepill or runit.
+  `nginx-pixelcog::source` recipe when the init style is not bluepill or runit.
 
-#### nginx::authorized_ips
+#### nginx-pixelcog::authorized_ips
 - `node['nginx']['remote_ip_var']` - The remote ip variable name to
   use.
 - `node['nginx']['authorized_ips']` - IPs authorized by the module
 
-#### nginx::http_realip_module
+#### nginx-pixelcog::http_realip_module
 From: http://nginx.org/en/docs/http/ngx_http_realip_module.html
 
 - `node['nginx']['realip']['header']` - Header to use for the RealIp
@@ -163,7 +163,7 @@ From: http://nginx.org/en/docs/http/ngx_http_realip_module.html
 - `node['nginx']['realip']['real_ip_recursive']` - If recursive search is enabled, the original client address that matches one of the trusted addresses is replaced by the last non-trusted address sent in the request header field. Can be on "on" or "off" (default).
 
 ### source
-These attributes are used in the `nginx::source` recipe. Some of them
+These attributes are used in the `nginx-pixelcog::source` recipe. Some of them
 are dynamically modified during the run. See `attributes/source.rb`
 for default values.
 
@@ -176,19 +176,19 @@ for default values.
   file, in `node['nginx']['dir']` by default.
 - `node['nginx']['source']['modules']` - Array of modules that should
   be compiled into Nginx by including their recipes in
-  `nginx::source`.
+  `nginx-pixelcog::source`.
 - `node['nginx']['source']['default_configure_flags']` - The default
   flags passed to the configure script when building Nginx.
 - `node['nginx']['configure_flags']` - Preserved for compatibility and
   dynamically generated from the
   `node['nginx']['source']['default_configure_flags']` in the
-  `nginx::source` recipe.
+  `nginx-pixelcog::source` recipe.
 * `node['nginx']['source']['use_existing_user']` - set to `true` if you
-  do not want `nginx::source` recipe to create system user with name
+  do not want `nginx-pixelcog::source` recipe to create system user with name
   `node['nginx']['user']`.
 
 ### geoip
-These attributes are used in the `nginx::http_geoip_module` recipe.
+These attributes are used in the `nginx-pixelcog::http_geoip_module` recipe.
 Please note that the `country_dat_checksum` and `city_dat_checksum`
 are based on downloads from a datacenter in Fremont, CA, USA. You
 really should override these with checksums for the geo tarballs from
@@ -217,7 +217,7 @@ your node location.
   library tarball
 
 ### upload_progress
-These attributes are used in the `nginx::upload_progress_module`
+These attributes are used in the `nginx-pixelcog::upload_progress_module`
 recipe.
 
 - `node['nginx']['upload_progress']['url']` - URL for the tarball.
@@ -232,7 +232,7 @@ recipe.
   Default is `1m` (1 megabyte).
 
 ### passenger
-These attributes are used in the `nginx::passenger` recipe.
+These attributes are used in the `nginx-pixelcog::passenger` recipe.
 
 - `node['nginx']['passenger']['version']` - passenger gem version
 - `node['nginx']['passenger']['root']` - passenger gem root path
@@ -256,7 +256,7 @@ These attributes are used in the `nginx::passenger` recipe.
   (default=`0`)
 
 ### echo
-These attributes are used in the `nginx::http_echo_module` recipe.
+These attributes are used in the `nginx-pixelcog::http_echo_module` recipe.
 
 - `node['nginx']['echo']['version']` - The version of `http_echo` you
   want (default: 0.40)
@@ -264,13 +264,13 @@ These attributes are used in the `nginx::http_echo_module` recipe.
 - `node['nginx']['echo']['checksum']` - Checksum of the tarball.
 
 ### status
-These attributes are used in the `nginx::http_stub_status_module` recipe.
+These attributes are used in the `nginx-pixelcog::nginx-pixelcog::http_stub_status_module` recipe.
 
 - `node['nginx']['status']['port']` - The port on which nginx will
   serve the status info (default: 8090)
 
 ### openssl_source
-These attributes are used in the `nginx::openssl_source` recipe.
+These attributes are used in the `nginx-pixelcog::openssl_source` recipe.
 
 - `node['nginx']['openssl_source']['version']` - The version of OpenSSL
   you want to download and use (default: 1.0.1e)
@@ -279,7 +279,7 @@ These attributes are used in the `nginx::openssl_source` recipe.
 
 ## socketproxy.rb
 
-These attributes are used in the `nginx::socketproxy` recipe.
+These attributes are used in the `nginx-pixelcog::socketproxy` recipe.
 
 * `node['nginx']['socketproxy']['root']` - The directory (on your server) where socketproxy apps are deployed.
 * `node['nginx']['socketproxy']['default_app']` - Static assets directory for requests to "/" that don't meet any proxy_pass filter requirements.
@@ -354,7 +354,7 @@ The nginx service will be set up according to
   the init style.
 
 The following recipes are used to build module support into Nginx. To
-use a module in the `nginx::source` recipe, add its recipe name to the
+use a module in the `nginx-pixelcog::source` recipe, add its recipe name to the
 attribute `node['nginx']['source']['modules']`.
 
 - `ipv6.rb` - enables IPv6 support
@@ -391,7 +391,7 @@ node.run_state['nginx_configure_flags'] =
   node.run_state['nginx_configure_flags'] | ['--with-http_stub_status_module']
 ```
 
-The recipe will be included by `recipe[nginx::source]` automatically,
+The recipe will be included by `recipe[nginx-pixelcog::source]` automatically,
 adding the configure flags. Add any other configuration templates or
 other resources as required. See the recipes described above for
 examples.

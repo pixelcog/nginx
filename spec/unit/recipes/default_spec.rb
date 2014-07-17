@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe 'nginx::default' do
+describe 'nginx-pixelcog::default' do
   let(:chef_run) { ChefSpec::Runner.new(:platform => 'debian', :version  => '7.0').converge(described_recipe) }
 
   it 'loads the ohai plugin' do
-    expect(chef_run).to include_recipe('nginx::ohai_plugin')
+    expect(chef_run).to include_recipe('nginx-pixelcog::ohai_plugin')
   end
 
   it 'builds from source when specified' do
     chef_run.node.set['nginx']['install_method'] = 'source'
     chef_run.converge(described_recipe)
-    expect(chef_run).to include_recipe('nginx::source')
+    expect(chef_run).to include_recipe('nginx-pixelcog::source')
   end
 
   context 'configured to install by package' do
@@ -23,10 +23,10 @@ describe 'nginx::default' do
         expect(chef_run).to include_recipe('yum-epel')
       end
 
-      it 'includes the nginx::repo recipe if the source is not epel' do
+      it 'includes the nginx-pixelcog::repo recipe if the source is not epel' do
         chef_run.node.set['nginx']['repo_source'] = 'nginx'
         chef_run.converge(described_recipe)
-        expect(chef_run).to include_recipe('nginx::repo')
+        expect(chef_run).to include_recipe('nginx-pixelcog::repo')
       end
     end
 
@@ -39,7 +39,7 @@ describe 'nginx::default' do
     end
 
     it 'executes common nginx configuration' do
-      expect(chef_run).to include_recipe('nginx::commons')
+      expect(chef_run).to include_recipe('nginx-pixelcog::commons')
     end
   end
 
